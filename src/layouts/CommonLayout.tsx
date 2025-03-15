@@ -4,43 +4,27 @@ import styled from "styled-components";
 import QueryErrorBoundary from "@/services/QueryErrorBoundary";
 import { Suspense } from "react";
 import Loading from "@/pages/Loading";
+import Header from "./Header";
+import Footer from "./Footer";
 
 const Background = styled.div`
   width: 100%;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-`;
-
-const MainContents = styled.div`
-  width: 100%;
-`;
-
-const MainContentsSection = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex: 1;
-  width: 100%;
-  box-sizing: border-box;
-  background-color: rgb(255, 255, 255);
-  align-items: stretch;
+  overflow: hidden;
 `;
 
 function CommonLayout() {
   return (
     <Background>
-
-      <MainContentsSection>
-    
-        <MainContents>
-          <QueryErrorBoundary>
-            <Suspense fallback={<Loading />}>
-              <Outlet />
-            </Suspense>
-          </QueryErrorBoundary>
-        </MainContents>
-      </MainContentsSection>
-
+      <Header />
+      <QueryErrorBoundary>
+        <Suspense fallback={<Loading />}>
+          <Outlet />
+        </Suspense>
+      </QueryErrorBoundary>
+      <Footer />
     </Background>
   );
 }
