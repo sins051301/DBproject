@@ -5,6 +5,7 @@ const SummaryContainer = styled.main`
   background: white;
   border-radius: 5px;
   width: 90%;
+  margin-top: 20px;
   border: solid #e5e7eb;
   margin-bottom: 30px;
   margin-left: 10px;

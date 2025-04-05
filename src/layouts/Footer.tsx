@@ -11,6 +11,8 @@ const FooterSection = styled.footer`
 `;
 
 function Footer() {
-  return <FooterSection>© 2024 토론방. All rights reserved. </FooterSection>;
+  return (
+    <FooterSection>© 2024 Learning Mate. All rights reserved. </FooterSection>
+  );
 }
 export default Footer;

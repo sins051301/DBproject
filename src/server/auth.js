@@ -80,9 +80,6 @@ export const login = async (req, res) => {
 
     // 로그인 성공, 토큰과 사용자 정보 반환
     res.status(200).json({
-      message: "Login successful",
-      role,
-      user,
       token, // 토큰을 클라이언트에 전달
     });
   } catch (err) {

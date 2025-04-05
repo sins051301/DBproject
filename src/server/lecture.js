@@ -129,26 +129,43 @@ export const getLecturesByCourse = async (req, res) => {
   try {
     const pool = await sql.connect(serverConfig);
 
-    const result = await pool
+    const lecturesResult = await pool
       .request()
-      .input("course_id", sql.BigInt, course_id) // course_id를 입력값으로 바인딩
-      .query(`
-              SELECT 
-                l.lecture_id, 
-                l.course_id,  
-                l.title AS lecture_title, 
-                l.description AS lecture_description, 
-                l.date AS lecture_date
-              FROM dbo.강의 l
-              WHERE l.course_id = @course_id
-            `);
+      .input("course_id", sql.BigInt, course_id).query(`
+        SELECT 
+          l.lecture_id, 
+          l.course_id,  
+          l.title AS lecture_title, 
+          l.description AS lecture_description, 
+          l.date AS lecture_date
+        FROM dbo.강의 l
+        WHERE l.course_id = @course_id
+      `);
 
-    res.status(200).json(result.recordset);
+    const lectures = lecturesResult.recordset;
+
+    for (const lecture of lectures) {
+      const assignmentsResult = await pool
+        .request()
+        .input("lecture_id", sql.BigInt, lecture.lecture_id).query(`
+          SELECT 
+            a.assignment_id, 
+            a.title, 
+            a.description, 
+            a.due_date, 
+            a.created_at
+          FROM dbo.과제 a
+          WHERE a.lecture_id = @lecture_id
+        `);
+
+      lecture.assignments = assignmentsResult.recordset;
+    }
+
+    res.status(200).json(lectures);
   } catch (err) {
-    internalErrorMessage(err, res, "강의 목록 조회 오류");
+    internalErrorMessage(err, res, "강의 및 과제 목록 조회 오류");
   }
 };
-
 // 🔹 강좌에 강의 추가 API
 export const addLectureToCourse = async (req, res) => {
   try {
@@ -258,7 +275,7 @@ export const getMyCourses = async (req, res) => {
           c.major, 
           c.img_url, 
           c.enrollment_date, 
-          p.professor_name AS professor
+          p.professor_name AS professor_name
         FROM dbo.강좌_학생 ks
         JOIN dbo.강좌 c ON ks.course_id = c.course_id
         JOIN dbo.교수자 p ON c.professor_id = p.professor_id

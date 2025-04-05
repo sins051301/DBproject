@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import DummyLogo from "@/assets/dummyLogo.svg?react";
 import { Link, useNavigate } from "react-router-dom";
-import DummyProfile from "@/assets/dummyLogo.svg?react";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
 
 const HeaderSection = styled.header`
   border-bottom: 1px solid gray;
@@ -28,13 +28,47 @@ const LoginButton = styled(Link)`
   border-radius: 2px;
 `;
 
+const SignUpButton = styled(Link)`
+  width: 40px;
+  height: 15px;
+  background-color: white;
+  color: black;
+  border: 1px solid gray;
+  font-size: 0.5rem;
+  text-align: center;
+  text-decoration: none;
+  padding-top: 5px;
+  border-radius: 2px;
+`;
+
+const ButtonSection = styled.div`
+  flex-direction: row;
+  gap: 10px;
+  display: flex;
+`;
+
 function Header() {
   const navigate = useNavigate();
+  const clearToken = useAuthStore((state) => state.clearToken);
+  const accessToken = useAuthStore((state) => state.accessToken);
+  console.log(accessToken);
   return (
     <HeaderSection>
       <DummyLogo onClick={() => navigate("../")} />
-      <DummyProfile onClick={() => navigate("/dashboard")} />
-      <LoginButton to={"/login"}>로그인</LoginButton>
+
+      {accessToken ? (
+        <ButtonSection>
+          <LoginButton to={"/course/my"}>내 강의</LoginButton>
+          <SignUpButton to={"/"} onClick={clearToken}>
+            로그아웃
+          </SignUpButton>
+        </ButtonSection>
+      ) : (
+        <ButtonSection>
+          <LoginButton to={"/login"}>로그인</LoginButton>
+          <SignUpButton to={"/signup"}>회원가입</SignUpButton>
+        </ButtonSection>
+      )}
     </HeaderSection>
   );
 }

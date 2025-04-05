@@ -15,13 +15,19 @@ const Background = styled.div`
   overflow: hidden;
 `;
 
+const MainContent = styled.main`
+  min-height: 83vh;
+`;
+
 function CommonLayout() {
   return (
     <Background>
       <Header />
       <QueryErrorBoundary>
         <Suspense fallback={<Loading />}>
-          <Outlet />
+          <MainContent>
+            <Outlet />
+          </MainContent>
         </Suspense>
       </QueryErrorBoundary>
       <Footer />

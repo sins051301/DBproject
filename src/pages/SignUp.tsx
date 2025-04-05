@@ -1,9 +1,9 @@
-import { saveAuthTokens } from "@/features/auth/api/auth.api";
+import { signUpRequest } from "@/features/signup/signup.api";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-const LoginContainer = styled.div`
+const SignupContainer = styled.div`
   display: flex;
   flex-direction: column;
   background: white;
@@ -48,8 +48,8 @@ const Input = styled.input`
   }
 `;
 
-const LoginButton = styled.button`
-  width: 40%;
+const SignupButton = styled.button`
+  width: 35%;
   padding: 12px;
   background: #4a3aff;
   border: none;
@@ -80,26 +80,52 @@ const TextLink = styled.p`
   }
 `;
 
-function Login() {
+function Signup() {
+  const [nickname, setNickname] = useState("");
   const [email, setEmail] = useState("");
+  const [memberName, setMemberName] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const handleLogin = async () => {
-    await saveAuthTokens({ email, password });
-    navigate("/");
+  const handleSignup = async () => {
+    // 회원가입 처리 로직 (예: API 호출)
+
+    // 예시: 비밀번호 유효성 검사
+    if (password.length < 4) {
+      alert("비밀번호는 최소 4자 이상이어야 합니다.");
+      return;
+    }
+    await signUpRequest({
+      nickname,
+      email,
+      member_name: memberName,
+      password,
+    });
+    navigate("/login");
   };
 
   return (
-    <LoginContainer>
+    <SignupContainer>
       <Logo>로고</Logo>
-      <Title>토론의 장에 오신 것을 환영합니다</Title>
-      <Subtitle>아이디와 비밀번호로 로그인 해주세요</Subtitle>
+      <Title>회원가입</Title>
+      <Subtitle>회원가입을 위해 정보를 입력해주세요</Subtitle>
 
       <Input
         type="text"
+        placeholder="닉네임"
+        value={nickname}
+        onChange={(e) => setNickname(e.target.value)}
+      />
+      <Input
+        type="email"
         placeholder="이메일"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+      />
+      <Input
+        type="text"
+        placeholder="회원 이름"
+        value={memberName}
+        onChange={(e) => setMemberName(e.target.value)}
       />
       <Input
         type="password"
@@ -108,16 +134,13 @@ function Login() {
         onChange={(e) => setPassword(e.target.value)}
       />
 
-      <LoginButton onClick={handleLogin}>로그인</LoginButton>
+      <SignupButton onClick={handleSignup}>회원가입</SignupButton>
 
       <TextLink>
-        로그인 시 <a href="#">이용약관</a>과 <a href="#">개인정보처리방침</a>에
-        동의하는 것으로 간주됩니다.
+        이미 계정이 있으신가요? <Link to="/login">로그인</Link>
       </TextLink>
-
-      <TextLink>로그인에 문제가 있으신가요?</TextLink>
-    </LoginContainer>
+    </SignupContainer>
   );
 }
 
-export default Login;
+export default Signup;

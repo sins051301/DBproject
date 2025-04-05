@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "front": "vite",
     "start": "concurrently \"vite\" \"nodemon src/server/index.js\"",
     "server": "nodemon src/server/index.js",
     "build": "tsc -b && vite build",
@@ -14,6 +15,7 @@
   "dependencies": {
     "@tanstack/react-query": "^5.68.0",
     "@tanstack/react-query-devtools": "^5.68.0",
+    "axios": "^1.8.4",
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
